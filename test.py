@@ -17,13 +17,18 @@ with tf.gfile.FastGFile("retrained_graph.pb", 'rb') as f:
     graph_def.ParseFromString(f.read())
     _ = tf.import_graph_def(graph_def, name='')
 
+
+def return_lambda_gateway_response(code, body):
+    return {"statusCode": code, "body": json.dumps(body)}
+
 def predict(event, context):
+    labels = {}
 
     # change this as you see fit
-    image_path = sys.argv[1]
+    #image_path = sys.argv[1]
 
     # Read in the image_data
-    image_data = tf.gfile.FastGFile(image_path, 'rb').read()
+    image_data = tf.gfile.FastGFile("corgi.jpg", 'rb').read()
 
     with tf.Session() as sess:
         # Feed the image_data as input to the graph and get first prediction
@@ -35,10 +40,11 @@ def predict(event, context):
         # Sort to show labels of first prediction in order of confidence
         top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
 
+        labels = {}
         for node_id in top_k:
-            human_string = label_lines[node_id]
-            score = predictions[0][node_id]
-            print('%s (score = %.5f)' % (human_string, score))
+            labels[label_lines[node_id]] = predictions[0][node_id]
+
+    return return_lambda_gateway_response(200, labels)
 
 def main():
     predict(0,0)
