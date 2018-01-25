@@ -1,0 +1,10 @@
+rottweiler
+yorkshire terrier
+bulldog
+french bulldog
+german shepherd
+poodle
+beagle
+golden retriever
+labrador retriever
+corgi
