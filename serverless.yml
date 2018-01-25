@@ -1,0 +1,17 @@
+frameworkVersion: ">=1.2.1"
+
+service: serverless-dog-breed
+
+provider:
+  name: aws
+  runtime: python3.6
+  stage: dev
+  region: us-west-2
+
+functions:
+  predict:
+    handler: handler.predict
+    events:
+      - http:
+          path: /predict
+method: get
