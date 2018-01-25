@@ -45,9 +45,3 @@ def predict(event, context):
             labels[label_lines[node_id]] = predictions[0][node_id]
 
     return return_lambda_gateway_response(200, labels)
-
-def main():
-    predict(0,0)
-
-if __name__ == "__main__":
-    main()
