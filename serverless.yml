@@ -2,11 +2,20 @@ frameworkVersion: ">=1.2.1"
 
 service: serverless-dog-breed
 
+custom:
+  bucket: serverless-dog-breed
+
 provider:
   name: aws
   runtime: python3.6
   stage: dev
   region: us-west-2
+  deploymentBucket: serverless-dog-breed
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource: "*"
 
 functions:
   predict:
