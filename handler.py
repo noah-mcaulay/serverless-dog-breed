@@ -21,6 +21,8 @@ def predict(event, context):
 
     s3 = boto3.resource('s3')
     bucket = s3.Bucket('serverless-dog-breed')
+    s3.Bucket('serverless-dog-breed').download_file('retrained_graph.pb', 'retrained_graph.pb')
+
 
     print("finished loading file from s3!")
 
