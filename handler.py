@@ -21,13 +21,13 @@ def predict(event, context):
 
     s3 = boto3.resource('s3')
     bucket = s3.Bucket('serverless-dog-breed')
-    s3.Bucket('serverless-dog-breed').download_file('retrained_graph.pb', 'retrained_graph.pb')
+    bucket.download_file('retrained_graph.pb', '/tmp/retrained_graph.pb')
 
 
     print("finished loading file from s3!")
 
     # Unpersists graph from file
-    with tf.gfile.FastGFile("retrained_graph.pb", 'rb') as f:
+    with tf.gfile.FastGFile("/tmp/retrained_graph.pb", 'rb') as f:
         graph_def = tf.GraphDef()
         graph_def.ParseFromString(f.read())
         _ = tf.import_graph_def(graph_def, name='')
