@@ -22,7 +22,7 @@ def predict(event, context):
     s3 = boto3.resource('s3')
     bucket = s3.Bucket('serverless-dog-breed')
     bucket.download_file('retrained_graph.pb', '/tmp/retrained_graph.pb')
-
+    bucket.download_file('corgi.jpg', '/tmp/corgi.jpg')
 
     print("finished loading file from s3!")
 
@@ -38,7 +38,7 @@ def predict(event, context):
     #image_path = sys.argv[1]
 
     # Read in the image_data
-    image_data = tf.gfile.FastGFile("corgi.jpg", 'rb').read()
+    image_data = tf.gfile.FastGFile("/tmp/corgi.jpg", 'rb').read()
 
     with tf.Session() as sess:
         # Feed the image_data as input to the graph and get first prediction
