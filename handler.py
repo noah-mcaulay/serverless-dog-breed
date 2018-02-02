@@ -1,27 +1,35 @@
 import os
 import sys
 import json
+import boto3
 
 HERE = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.join(HERE, "vendored"))
 
 import tensorflow as tf
 
-# Loads label file, strips off carriage return
-label_lines = [line.rstrip() for line
-               in tf.gfile.GFile("retrained_labels.txt")]
-
-# Unpersists graph from file
-with tf.gfile.FastGFile("retrained_graph.pb", 'rb') as f:
-    graph_def = tf.GraphDef()
-    graph_def.ParseFromString(f.read())
-    _ = tf.import_graph_def(graph_def, name='')
-
 
 def return_lambda_gateway_response(code, body):
     return {"statusCode": code, "body": json.dumps(body)}
 
 def predict(event, context):
+    # Loads label file, strips off carriage return
+    label_lines = [line.rstrip() for line
+                   in tf.gfile.GFile("retrained_labels.txt")]
+
+    print("preparing to load file from s3....")
+
+    s3 = boto3.resource('s3')
+    bucket = s3.Bucket('serverless-dog-breed')
+
+    print("finished loading file from s3!")
+
+    # Unpersists graph from file
+    with tf.gfile.FastGFile("retrained_graph.pb", 'rb') as f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
+        _ = tf.import_graph_def(graph_def, name='')
+
     labels = {}
 
     # change this as you see fit
